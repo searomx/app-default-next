@@ -1,13 +1,13 @@
 import { useState } from "react";
 
 interface IdadosCnpjProps {
-  getCnpjBase?: string[];
+  cnpj: string[];
 }
 
 export default function TableCnpjBase(props: IdadosCnpjProps) {
-  console.log(props.getCnpjBase);
+  console.log(props.cnpj);
   const [cnpjBase, setCnpjBase] = useState<IdadosCnpjProps[]>([]);
-  const dados = props.getCnpjBase;
+  const dados = props.cnpj;
   return (
     <div className="border-solid border-zinc-400 rounded-md overflow-hidden p-1 w-1/2">
       <table className="flex flex-col justify-center w-1/2">
