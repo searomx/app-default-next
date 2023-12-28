@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import HeaderContainer from "./HeaderContainer";
 import TableCnpjBase from "./TableCnpjBase";
 
+interface ConteudoProps {
+  dadosCnpj: string[];
+}
+
 export default function Conteudo(props) {
   return (
     <section className="flex min-w-full p-3">

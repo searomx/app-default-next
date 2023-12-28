@@ -6,8 +6,7 @@ interface IdadosCnpjProps {
 
 export default function TableCnpjBase(props: IdadosCnpjProps) {
   console.log(props.cnpj);
-  const [cnpjBase, setCnpjBase] = useState<IdadosCnpjProps[]>([]);
-  const dados = props.cnpj;
+
   return (
     <div className="border-solid border-zinc-400 rounded-md overflow-hidden p-1 w-1/2">
       <table className="flex flex-col justify-center w-1/2">
@@ -18,15 +17,7 @@ export default function TableCnpjBase(props: IdadosCnpjProps) {
             </th>
           </tr>
         </thead>
-        <tbody>
-          {/* {dados.map((cnpj) => (
-            <tr key={+cnpj.id} className="min-w-full">
-              <td className="min-w-full bg-slate-900 text-white font-bold justify-center">
-                {cnpj.cnpj_base}
-              </td>
-            </tr>
-          ))} */}
-        </tbody>
+        <tbody></tbody>
       </table>
     </div>
   );
