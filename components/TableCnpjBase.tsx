@@ -1,12 +1,11 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface IdadosCnpjProps {
   cnpj: string[];
 }
 
 export default function TableCnpjBase(props: IdadosCnpjProps) {
-  console.log("Propriedades: ", props.cnpj);
-
+  console.log(props.cnpj);
   return (
     <div
       className={` justify-between
@@ -24,12 +23,12 @@ export default function TableCnpjBase(props: IdadosCnpjProps) {
           </tr>
         </thead>
         <tbody>
-          {props.cnpj.map((cnpj) => (
-            <tr key={cnpj.id} className="flex min-w-full">
-              <td className="flex text-black font-bold justify-center mx-1">
-                {cnpj.id}
+          {props.cnpj.map((cnpj, index) => (
+            <tr key={cnpj} className="flex min-w-full">
+              <td className="text-black font-bold justify-center mx-1">
+                {index + 1}
               </td>
-              <td className="flex text-black font-bold justify-center mx-1">
+              <td className="text-black font-bold justify-center items-center">
                 {cnpj.cnpj}
               </td>
             </tr>
