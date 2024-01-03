@@ -67,7 +67,7 @@ export default function HeaderContainer() {
   const notify2 = async () => toast("CNPJ inválido!");
 
   return (
-    <section className="flex min-w-full px-3">
+    <section className="flex min-w-full">
       <ToastContainer
         position="top-right"
         autoClose={3000}
@@ -81,7 +81,7 @@ export default function HeaderContainer() {
         theme="light"
       />
 
-      <div className="flex min-w-full min-h-full bg-slate-900 text-white rounded-md justify-around items-center">
+      <div className="flex min-w-full min-h-full bg-slate-900 text-white justify-around items-center">
         <div className="flex p-3">
           <label htmlFor="token" className="sr-only">
             Token
