@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 interface IdadosCnpjProps {
-  cnpj: string[];
+  cnpj: any[];
 }
 
 export default function TableCnpjBase(props: IdadosCnpjProps) {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 interface IdadosClientesProps {
-  clientes: string[];
+  clientes: any[];
 }
 
 /*key: "4",
@@ -12,8 +12,6 @@ interface IdadosClientesProps {
     status: "Vacation",*/
 
 export default function TableDadosClientes(props: IdadosClientesProps) {
-  const { key, name, address, city, role, status } = props.clientes;
-  console.log(props.clientes);
   return (
     <table className="flex flex-col min-w-full h-full scroll-auto">
       <thead>
@@ -28,7 +26,7 @@ export default function TableDadosClientes(props: IdadosClientesProps) {
       </thead>
       <tbody>
         {props.clientes.map((cliente) => (
-          <tr key={cliente.key} className="flex min-w-full">
+          <tr key={cliente.key} className="flex w-full">
             <td className="text-black font-bold items-center mx-1">
               {cliente.key}
             </td>
