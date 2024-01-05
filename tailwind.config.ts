@@ -31,6 +31,12 @@ const config: Config = {
       // => @media (min-width: 1536px) { ... }
     },
   },
+  safelist: [
+    {
+      pattern: /^grid-cols-/,
+      variants: ["sm", "md", "lg", "xl", "2xl"],
+    },
+  ],
   plugins: [],
 };
 export default config;

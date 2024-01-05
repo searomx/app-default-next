@@ -10,13 +10,13 @@ interface GridProps {
 export default function Grid(props: GridProps) {
   return (
     <div
-      className={`grid grid-cols-${props.cols ?? 1}
+      className={`grid grid-cols-${props.cols ?? 2}
       ${props.sm ? `sm:grid-cols-${props.sm}` : ""}
       ${props.md ? `md:grid-cols-${props.md}` : ""}
       ${props.lg ? `lg:grid-cols-${props.lg}` : ""}
       ${props.xl ? `xl:grid-cols-${props.xl}` : ""}
       ${props.xl2 ? `2xl:grid-cols-${props.xl2}` : ""}
-      gap-4 w-full`}
+      gap-4 w-screen justify-around`}
     >
       {props.children}
     </div>

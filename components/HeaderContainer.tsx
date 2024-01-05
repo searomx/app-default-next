@@ -22,9 +22,6 @@ export default function HeaderContainer() {
     "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJoZWxsbyI6IndvcmxkIiwibWVzc2FnZSI6IlRoYW5rcyBmb3IgdmlzaXRpbmcgbm96emxlZ2Vhci5jb20hIiwiaXNzdWVkIjoxNTU3MjU4ODc3NTI2fQ.NXd7lC3rFLiNHXwefUu3OQ-R203pGfB87-dIrk2S-vqfaygIWFwZKzmGHr6pzYkl2a0HkY0fdwa38yLWu8Zdhg";
   async function getCNPJ() {
     const token = "INFORME O SEU TOKEN DE ACESSO";
-
-    const empresa = await consultarCNPJ("", token);
-    console.log(empresa);
   }
 
   async function onEnviarToken() {
