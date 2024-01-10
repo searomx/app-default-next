@@ -4,13 +4,6 @@ interface IdadosClientesProps {
   clientes: any[];
 }
 
-/*key: "4",
-    name: "William Howard",
-    address: "1234 Main St",
-    city: "New York",
-    role: "Community Manager",
-    status: "Vacation",*/
-
 export default function TableDadosClientes(props: IdadosClientesProps) {
   return (
     <table className="flex flex-col h-full scroll-auto">

@@ -2,27 +2,70 @@
 import Papa from "papaparse";
 import { FormEvent, useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { ToastContainer, toast } from "react-toastify";
+import { Id, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React from "react";
 import ValidaCnpj from "@/lib/utils/validacnpj";
+import CnpjBase from "@/app/models/cnpjbase";
 
 interface Idados {
-  id: string;
-  cnpjBase: string;
+  id: number;
+  cnpj: string;
+  cnpjs: CnpjBase;
 }
 
-export default function HeaderContainer() {
-  const [cnpBase, setCnpjBase] = useState<Idados[]>([]);
+export default function HeaderContainer(props: Idados) {
   const [inputCnpjUnico, setCnpjUnico] = useState<string>("");
   const [inputToken, setInputToken] = useState<string>("");
   const toastId = React.useRef(null);
+  const [dadosCnpj, setDadosCnpj] = useState([]);
 
   const strtoken =
     "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJoZWxsbyI6IndvcmxkIiwibWVzc2FnZSI6IlRoYW5rcyBmb3IgdmlzaXRpbmcgbm96emxlZ2Vhci5jb20hIiwiaXNzdWVkIjoxNTU3MjU4ODc3NTI2fQ.NXd7lC3rFLiNHXwefUu3OQ-R203pGfB87-dIrk2S-vqfaygIWFwZKzmGHr6pzYkl2a0HkY0fdwa38yLWu8Zdhg";
   async function getCNPJ() {
     const token = "INFORME O SEU TOKEN DE ACESSO";
   }
+
+  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+
+    const arquivo = e.target.files?.[0];
+    const dados: Idados[] = [];
+    if (arquivo) {
+      Papa.parse(arquivo, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: (result) => {
+          result.data.map((e: any) => {
+            dados.push(e as Idados);
+          });
+
+          console.log("Dados do CNPJ: ", dados);
+        },
+        error: (error) => {
+          alert("Erro ao analisar o CSV: " + error.message);
+        },
+      });
+    }
+  };
+  // const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
+  //   const reader = new FileReader();
+  //   reader.onload = async (e) => {
+  //     if (e.target?.result) {
+  //       const text = e.target.result;
+  //       const parsedData: Idados[] = Papa.parse(text as string, {
+  //         skipEmptyLines: true,
+  //         header: true,
+  //       }).data as Idados[];
+  //       setCnpjBase(parsedData);
+  //       console.log(cnpBase);
+  //     }
+  //   };
+  //   reader.readAsText(file);
+  // };
 
   async function onEnviarToken() {
     if (inputToken.trim() === "") {
@@ -99,9 +142,9 @@ export default function HeaderContainer() {
             Enviar
           </button>
         </div>
-        {/* <div className={`flex mt-4 gap-4`}>
-          <input accept=".csv" id="upload" type="file" onchange={handleFiles} />
-        </div> */}
+        <div className={`flex mt-4 gap-4`}>
+          <input accept=".csv" id="upload" type="file" onChange={handleFiles} />
+        </div>
 
         <div className={`flex`}>
           <input

@@ -8,9 +8,11 @@ import Grid from "./Grid";
 
 interface ConteudoProps {
   buscarCnpj: () => void;
+  cnpjs: any[];
 }
 
-export default function Conteudo() {
+export default function Conteudo(props: ConteudoProps) {
+  console.log(props.cnpjs);
   return (
     <section>
       <div className="flex flex-col w-full min-h-[calc(100vh_-_14.5rem)] p-3">

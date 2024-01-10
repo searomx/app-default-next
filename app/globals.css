@@ -70,6 +70,7 @@ body {
 }
 .botao-blue {
   @apply target:text-white bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80;
+  @apply focus:to-blue-950 shadow-md;
 }
 .botao-green {
   @apply target:text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80;
@@ -156,4 +157,18 @@ tr:nth-child(even) {
 }
 tr:nth-child(odd) {
   background-color: #f1f1f1;
+}
+/* Esconde o input */
+input[type="file"] {
+  display: none;
+}
+
+/* Aparência que terá o seletor de arquivo */
+label {
+  background-color: #3498db;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+  margin: 10px;
+  padding: 6px 20px;
 }
