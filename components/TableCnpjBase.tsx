@@ -1,42 +1,48 @@
+'use client';
+import CompleteString from "@/lib/utils/completestring";
 import Papa from "papaparse";
+import { useState } from "react";
 
-interface IdadosCnpjProps {
-  cnpj: any[];
-}
-
-const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-  e.preventDefault();
-
-  const arquivo = e.target.files?.[0];
-  const dados: IdadosCnpjProps[] = [];
-  if (arquivo) {
-    Papa.parse(arquivo, {
-      header: true,
-      dynamicTyping: true,
-      skipEmptyLines: true,
-      complete: (result) => {
-        result.data.map((e: any) => {
-          dados.push(e as IdadosCnpjProps);
-        });
-
-        console.log("Dados do Tabela: ", dados);
-      },
-      error: (error) => {
-        alert("Erro ao analisar o CSV: " + error.message);
-      },
-    });
-  }
+type TCnpj = {
+  cnpj: string[];
 };
 
-export default function TableCnpjBase(props: IdadosCnpjProps) {
-  const itens = props.cnpj.map((cnpj, index) => {
+export default function TableCnpjBase() {
+  const [dados, setDados] = useState<TCnpj[]>([]);
+  const dataCnpj: TCnpj[] = [];
+  let campo = "";
+
+  const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    let txtcnpj = "";
+    const arquivo = e.target.files && e.target.files[0];
+    if (arquivo) {
+      Papa.parse(arquivo, {
+        header: true,
+        dynamicTyping: true,
+        skipEmptyLines: true,
+        complete: (results) => {
+          results.data.map((item: any) => {
+            txtcnpj = item.cnpj.toString();
+            campo = CompleteString(txtcnpj, 14, "0");
+            dataCnpj.push({ cnpj: [campo] });
+          });
+          setDados(dataCnpj as any[]);
+        },
+        error: (error) => {
+          alert("Erro ao analisar o CSV: " + error.message);
+        },
+      });
+    }
+  }
+  const itens = dados.map((row, index) => {
     return (
       <tr key={index} className="flex min-w-full">
         <td className="text-black font-bold justify-center items-center mx-2 w-[20%]">
           {index + 1}
         </td>
         <td className="text-black font-bold justify-center items-center w-[80%] mx-2">
-          {cnpj.cnpj ? cnpj.cnpj : "Sem CNPJ"}
+          {row.cnpj ? row.cnpj : "Sem CNPJ"}
         </td>
       </tr>
     );
