@@ -1,4 +1,5 @@
 'use client';
+import { api } from "@/lib/api";
 import CompleteString from "@/lib/utils/completestring";
 import Papa from "papaparse";
 import { useEffect, useState } from "react";
@@ -7,9 +8,16 @@ import { clearInterval, setInterval } from "timers";
 type TCnpj = {
   cnpj: string[];
 };
+type TDadosCliente = {
+  id: number;
+  nome: string;
+  cnpj: string;
+};
+
 
 export default function TableCnpjBase() {
   const [dados, setDados] = useState<TCnpj[]>([]);
+  const [dadosCliente, setDadosCliente] = useState<TDadosCliente[]>([]);
   const [linha, setLinha] = useState('');
   const dataCnpj: TCnpj[] = [];
   let campo = "";
@@ -55,8 +63,9 @@ export default function TableCnpjBase() {
     );
   });
   useEffect(() => {
-    const showLine = () => {
+    const showLine = async () => {
       if (lineNumber < dados.length) {
+        await api.post("/api/cnpj", { cnpj: dados[lineNumber].cnpj.toString() });
         console.log(dados[lineNumber].cnpj.toString());
         lineNumber++;
       } else {
@@ -64,8 +73,22 @@ export default function TableCnpjBase() {
         clearInterval(intervalId);
       }
     };
-    const intervalId = setInterval(showLine, 1000);
-  });
+    const intervalId = setInterval(showLine, 3000);
+  }, [dados, lineNumber]);
+
+  // async function enviarCnpjUnico() {
+  //   if (inputCnpjUnico.trim() === "") {
+  //     return;
+  //   }
+
+  //   const cnpj_validado = ValidaCnpj(inputCnpjUnico);
+  //   if (cnpj_validado) {
+  //     await api.post("/api/unique", { cnpj: cnpj_validado });
+  //     notify1();
+  //   } else {
+  //     notify2();
+  //   }
+  // }
 
   return (
     <>

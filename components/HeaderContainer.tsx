@@ -26,47 +26,6 @@ export default function HeaderContainer(props: Idados) {
     const token = "INFORME O SEU TOKEN DE ACESSO";
   }
 
-  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-
-    const arquivo = e.target.files?.[0];
-    const dados: Idados[] = [];
-    if (arquivo) {
-      Papa.parse(arquivo, {
-        header: true,
-        dynamicTyping: true,
-        skipEmptyLines: true,
-        complete: (result) => {
-          result.data.map((e: any) => {
-            dados.push(e as Idados);
-          });
-
-          console.log("Dados do CNPJ: ", dados);
-        },
-        error: (error) => {
-          alert("Erro ao analisar o CSV: " + error.message);
-        },
-      });
-    }
-  };
-  // const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (!file) return;
-  //   const reader = new FileReader();
-  //   reader.onload = async (e) => {
-  //     if (e.target?.result) {
-  //       const text = e.target.result;
-  //       const parsedData: Idados[] = Papa.parse(text as string, {
-  //         skipEmptyLines: true,
-  //         header: true,
-  //       }).data as Idados[];
-  //       setCnpjBase(parsedData);
-  //       console.log(cnpBase);
-  //     }
-  //   };
-  //   reader.readAsText(file);
-  // };
-
   async function onEnviarToken() {
     if (inputToken.trim() === "") {
       return;
@@ -142,10 +101,6 @@ export default function HeaderContainer(props: Idados) {
             Enviar
           </button>
         </div>
-        <div className={`flex mt-4 gap-4`}>
-          <input accept=".csv" id="upload" type="file" onChange={handleFiles} />
-        </div>
-
         <div className={`flex`}>
           <input
             type="text"
