@@ -1,7 +1,8 @@
 'use client';
 import CompleteString from "@/lib/utils/completestring";
 import Papa from "papaparse";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { clearInterval, setInterval } from "timers";
 
 type TCnpj = {
   cnpj: string[];
@@ -9,8 +10,12 @@ type TCnpj = {
 
 export default function TableCnpjBase() {
   const [dados, setDados] = useState<TCnpj[]>([]);
+  const [linha, setLinha] = useState('');
   const dataCnpj: TCnpj[] = [];
   let campo = "";
+  let lineNumber = 0;
+
+
 
   const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -35,6 +40,8 @@ export default function TableCnpjBase() {
       });
     }
   }
+
+
   const itens = dados.map((row, index) => {
     return (
       <tr key={index} className="flex min-w-full">
@@ -47,9 +54,23 @@ export default function TableCnpjBase() {
       </tr>
     );
   });
+  useEffect(() => {
+    const showLine = () => {
+      if (lineNumber < dados.length) {
+        console.log(dados[lineNumber].cnpj.toString());
+        lineNumber++;
+      } else {
+        console.log('Fim do arquivo.');
+        clearInterval(intervalId);
+      }
+    };
+    const intervalId = setInterval(showLine, 1000);
+  });
+
   return (
     <>
       <div className="flex gap-3 p-3 justify-center">
+
         <label htmlFor="selecao-arquivo" className="btn btn-blue">
           Selecionar um arquivo &#187;
         </label>
@@ -72,5 +93,6 @@ export default function TableCnpjBase() {
         <tbody>{itens}</tbody>
       </table>
     </>
+
   );
 }
