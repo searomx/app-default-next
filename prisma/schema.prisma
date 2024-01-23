@@ -57,6 +57,9 @@ type AtividadesSecundarias {
 type Qsa {
   nome String?
   qual String?
+  pais_origem String?
+  nome_rep_legal String?
+  qual_rep_legal String?
 }
 
 
@@ -100,6 +103,12 @@ type Qsa {
 //   USER
 //   ADMIN
 // }
+model Base {
+  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
+  cnpj                String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 model Token {
   id                  String   @id @default(auto()) @map("_id") @db.ObjectId

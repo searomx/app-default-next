@@ -8,17 +8,16 @@ import React from "react";
 import ValidaCnpj from "@/lib/utils/validacnpj";
 import CnpjBase from "@/app/models/cnpjbase";
 
-interface Idados {
+type Idados = {
   id: number;
   cnpj: string;
   cnpjs: CnpjBase;
 }
 
-export default function HeaderContainer(props: Idados) {
+export default function HeaderContainer() {
   const [inputCnpjUnico, setCnpjUnico] = useState<string>("");
   const [inputToken, setInputToken] = useState<string>("");
   const toastId = React.useRef(null);
-  const [dadosCnpj, setDadosCnpj] = useState([]);
 
   const strtoken =
     "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJoZWxsbyI6IndvcmxkIiwibWVzc2FnZSI6IlRoYW5rcyBmb3IgdmlzaXRpbmcgbm96emxlZ2Vhci5jb20hIiwiaXNzdWVkIjoxNTU3MjU4ODc3NTI2fQ.NXd7lC3rFLiNHXwefUu3OQ-R203pGfB87-dIrk2S-vqfaygIWFwZKzmGHr6pzYkl2a0HkY0fdwa38yLWu8Zdhg";
