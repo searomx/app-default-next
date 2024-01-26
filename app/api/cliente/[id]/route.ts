@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { deleteById, getById, updateById } from "@/lib/services";
+import { deleteById, getByCnpj, getById, updateById } from "@/lib/services";
 
 interface DadosClientesProps {
   id: string;
@@ -8,26 +8,59 @@ interface DadosClientesProps {
   email: string;
   password: string;
 }
-
 export const GET = async (req: Request) => {
+  const { searchParams } = new URL(req.url);
+  const cnpj = searchParams.get("cnpj");
   try {
-    const id = req.url.split("/cliente/")[1];
-    const dados = await getById(id);
-    if (!dados) {
-      return NextResponse.json(
-        { message: "Cliente não foi Localizado!" },
-        { status: 404 }
-      );
-    } else {
-      return NextResponse.json(dados, { status: 200 });
+    if (cnpj) {
+      const dados = await getByCnpj(cnpj);
+      console.log("cnpj-enviado: ", cnpj);
+      return Response.json({ dados }, { status: 200 });
     }
   } catch (error) {
-    return NextResponse.json(
-      { message: "Erro no Servidor", error },
-      { status: 500 }
-    );
+    return Response.json({ error: "Cliente não encontrado!" }, { status: 400 });
   }
+
+
+
+  // try {
+  //   const cnpj = req.url.split("/base/")[1];
+  //   const dados = await getByCnpj(cnpj);
+  //   if (!dados) {
+  //     return NextResponse.json(
+  //       { message: "Cliente não foi Localizado!" },
+  //       { status: 404 }
+  //     );
+  //   } else {
+  //     return NextResponse.json(dados, { status: 200 });
+  //   }
+  // } catch (error) {
+  //   return NextResponse.json(
+  //     { message: "Erro no Servidor", error },
+  //     { status: 500 }
+  //   );
+  // }
 };
+
+// export const GET = async (req: Request) => {
+//   try {
+//     const id = req.url.split("/cliente/")[1];
+//     const dados = await getById(id);
+//     if (!dados) {
+//       return NextResponse.json(
+//         { message: "Cliente não foi Localizado!" },
+//         { status: 404 }
+//       );
+//     } else {
+//       return NextResponse.json(dados, { status: 200 });
+//     }
+//   } catch (error) {
+//     return NextResponse.json(
+//       { message: "Erro no Servidor", error },
+//       { status: 500 }
+//     );
+//   }
+// };
 
 export const PUT = async (req: Request, context: any) => {
   const param = context.params;
@@ -50,7 +83,6 @@ export const PUT = async (req: Request, context: any) => {
         data: {
           nome,
           email,
-          password,
         },
       });
       return NextResponse.json(

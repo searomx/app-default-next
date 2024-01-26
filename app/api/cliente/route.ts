@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getAllClientes } from "@/lib/services";
 
-interface DadosClientesProps {
+type DadosClientesProps = {
   id: string;
   nome: string;
   cnpj: string;

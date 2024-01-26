@@ -5,8 +5,22 @@ import CompleteString from "@/lib/utils/completestring";
 import error from "next/error";
 import Papa from "papaparse";
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, TypeOptions, toast } from "react-toastify";
 import { clearInterval, setInterval } from "timers";
+import {
+  ChakraProvider,
+  Box,
+  VStack,
+  //Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  CloseButton,
+  useDisclosure
+} from "@chakra-ui/react";
+import { Providers } from "@/app/providers/providers";
+import { Alert } from "./Alert";
+import ValidaCnpj from "@/lib/utils/validacnpj";
 
 
 type TCnpj = {
@@ -23,6 +37,7 @@ export default function TableCnpjBase() {
   const [dados, setDados] = useState<TCnpj[] | null>([]);
   const [dadosCliente, setDadosCliente] = useState<TDadosCliente[] | null>([]);
   const [resposta, setResposta] = useState<number>(0);
+  const [processando, setProcessando] = useState<boolean>(false);
   const dataCnpj: TCnpj[] = [];
   let campo = "";
   let intervalo: any;
@@ -62,32 +77,69 @@ export default function TableCnpjBase() {
     }
   }
   async function SaveAsCnpj(cnpjs: string[]) {
+    setProcessando(true);
     const result = await
       api.post("/api/base", cnpjs, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
       }).then((response) => {
-        getMensagemResponse(response.status);
-      })
-        .catch(function (error) {
-          console.warn(error.message);
-        });
+        const resp = response.data;
+        resp.map((item: any) => {
+          console.log("item-base:", item.id);
+        })
+        getMensagemResponse(response.status, response.data);
+        console.log("response-base:", response.data);
+      });
+    setProcessando(false);
+
     return result;
-  }
-  const getMensagemResponse = (resp: number) => {
-    let resResp: number = resp;
-    if (resResp === 200) {
-      status = resResp;
-      notify1();
-      return console.log("Dados salvos com sucesso!", status);
-    } else {
-      status = resResp;
-      notify2();
-      return console.log("Erro ao salvar os dados!", status);
-    }
+
   }
 
+  const getMensagemResponse = (resp: number, cnpj: string) => {
+    let resResp: number = resp;
+    console.log("resResp:", resResp);
+    let cnpjResp: string = cnpj;
+    if (resResp === 200) {
+      status = resResp;
+      getToast("CNPJs Salvos com sucesso!", "info");
+      return toast;
+    } else {
+      getToast(`O CNPJ: ${cnpjResp} já existe na base de dados!`, "error");
+      return toast;
+    }
+
+  }
+  async function getToast(mensagem: string, tipo: TypeOptions | undefined) {
+    toast(`O CNPJ: ${mensagem} já existe na base de dados!`, {
+      type: tipo,
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+
+    });
+    return toast;
+  }
+
+  const getCnpjUnico = async (id: string) => {
+    //const cnpj_validado = ValidaCnpj(cnpj);
+
+    await api.get(`/api/base/${id}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((response) => {
+      console.log("response:", response.data);
+      return response.data;
+    }).catch((error) => {
+      console.log("error:", error);
+    });
+
+    // notify2();
+  };
 
   const itens = dados!.map((row, index) => {
     return (
@@ -117,8 +169,7 @@ export default function TableCnpjBase() {
         clearInterval(intervalo);
       });
   }
-  const notify1 = async () => toast("CNPJ Salvo com sucesso!");
-  const notify2 = async () => toast("CNPJ já existe no banco de dados!");
+
 
   // const showLine = async () => {
   //   const controller = new AbortController();
@@ -182,19 +233,14 @@ export default function TableCnpjBase() {
   //   }
   // }
 
+  // const {
+  //   isOpen: isVisible,
+  //   onClose,
+  //   onOpen,
+  // } = useDisclosure({ defaultIsOpen: false });
+
   return (
     <>
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={true}
-        closeOnClick={true}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light" />
       <div className="flex gap-3 p-3 justify-center">
         <label htmlFor="selecao-arquivo" className="btn btn-blue">
           Selecionar um arquivo &#187;
@@ -204,9 +250,9 @@ export default function TableCnpjBase() {
           accept=".csv"
           type="file"
           onChange={handleFiles} />
-        <button className="btn btn-blue" onClick={() => temporizador()}>Obter Dados</button>
+        {/* <button className="btn btn-blue" onClick={() => temporizador()}>Obter Dados</button> */}
       </div>
-      <table className="flex flex-col scroll-auto p-4">
+      <table className="flex flex-col w-full max-h[95%] scroll-auto p-4">
         <thead>
           <tr className="flex min-w-full justify-center">
             <th className="w-[20%]">ID</th>

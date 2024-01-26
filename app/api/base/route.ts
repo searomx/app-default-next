@@ -1,33 +1,68 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { api } from "@/lib/api";
-import { Base } from "@prisma/client";
-import TableCnpjBase from "@/components/TableCnpjBase";
+import { findCnpjByIdBase } from "@/lib/services";
+import { RequestData } from "next/dist/server/web/types";
+import { Id } from "react-toastify";
+
 
 type TBase = {
-  cnpj?: string[];
+  id?: string;
+  cnpj?: string;
 }
+type TBasex = {
+  id?: string;
+  cnpj?: string;
+}
+
+export const GET = async (req: NextRequest, res: Response) => {
+  const id: string = req.url.split("/base")[1] as string;
+  const idx = id.split("=")[1];
+  const dados = await findCnpjByIdBase(idx);
+  return Response.json({ message: { dados } }, { status: 200 });
+}
+
 export async function POST(req: NextRequest, resp: NextResponse) {
-  const cnpj = await req.json();
+  const cnpj: string[] = await req.json();
+  console.log("cnpj-router: ", cnpj);
+  let cnpjValido: TBase[] = [] as TBase[];
+  let cnpjInValido: TBasex[] = [] as TBasex[];
   if (cnpj) {
     for (let i = 0; i < cnpj.length; i++) {
-      let cnpjx = cnpj[i];
+      let cnpjx = cnpj[i] as TBase["cnpj"];
       const res = await prisma.base.findFirst({
         where: {
-          cnpj: cnpjx,
+          cnpj: cnpj[i],
         },
       });
-      if (!res) {
-        const res = await prisma.base.create({
+
+      if (res === null) {
+        await prisma.base.create({
           data: {
+            cnpj: cnpj[i],
+          },
+        }).then((data) => {
+          cnpjValido.push({ id: data.id.toString(), cnpj: cnpj[i].toString() });
+          return data;
+        });
+      } else {
+        const resp = await prisma.basex.findFirst({
+          where: {
             cnpj: cnpjx,
           },
         });
-      } else {
-        return NextResponse.json({ message: `cnpj` }, { status: 201 });
+        if (resp === null) {
+          await prisma.basex.create({
+            data: {
+              id: res.id,
+              cnpj: cnpj[i],
+            },
+          }).then((dados) => {
+            cnpjInValido.push({ id: dados.id, cnpj: cnpj[i] });
+            return NextResponse.json(cnpjInValido, { status: 201 });
+          });
+        }
       }
     }
   }
-  return NextResponse.json({ cnpj }, { status: 200 });
-
+  return NextResponse.json(cnpjValido, { status: 200 });
 }

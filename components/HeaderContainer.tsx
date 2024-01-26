@@ -44,7 +44,6 @@ export default function HeaderContainer() {
     if (inputCnpjUnico.trim() === "") {
       return;
     }
-
     const cnpj_validado = ValidaCnpj(inputCnpjUnico);
     if (cnpj_validado) {
       await api.post("/api/unique", { cnpj: cnpj_validado });

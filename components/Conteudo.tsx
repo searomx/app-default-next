@@ -2,6 +2,7 @@
 import TableCnpjBase from "./TableCnpjBase";
 import TableDadosClientes from "./TableDadosClientes";
 import ListaClientes from "../app/data/listaClientes";
+import { useContext } from "react";
 
 
 export default function Conteudo() {
@@ -26,7 +27,7 @@ export default function Conteudo() {
                     rounded-md
                     p-2 bg-amber-400`}
           >
-            <TableDadosClientes clientes={ListaClientes} />
+            <TableDadosClientes />
           </div>
         </div>
       </div>

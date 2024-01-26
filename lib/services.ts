@@ -20,8 +20,8 @@ export const findClienteBase = async () => {
       return res;
     });
 };
-export const findCnpjBase = async (id: string) => {
-  return prisma.unique
+export const findCnpjByIdBase = async (id: string) => {
+  return await prisma.base
     .findUnique({
       where: {
         id: id,
@@ -41,6 +41,8 @@ export const findCliente = async () => {
       select: {
         id: true,
         nome: true,
+        municipio: true,
+        uf: true,
       },
     })
     .then((res) => {
@@ -64,6 +66,8 @@ export const getAllClientes = () => {
     select: {
       id: true,
       nome: true,
+      municipio: true,
+      uf: true,
     },
   });
 };
@@ -78,6 +82,21 @@ export const getToken = () => {
       nome: true,
     },
   });
+};
+
+export const getByCnpj = (cnpj: string) => {
+  try {
+    const dados = prisma.customer.findFirst({
+      where: {
+        cnpj,
+      },
+    });
+    return dados.then((res) => {
+      return res;
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const getById = (id: string) => {
