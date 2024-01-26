@@ -2,11 +2,12 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { deleteById, getByCnpj, getById, updateById } from "@/lib/services";
 
-interface DadosClientesProps {
+type DadosClientesProps = {
   id: string;
   nome: string;
-  email: string;
-  password: string;
+  cnpj: string;
+  municipio: string;
+  uf: string
 }
 export const GET = async (req: Request) => {
   const { searchParams } = new URL(req.url);
@@ -67,7 +68,7 @@ export const PUT = async (req: Request, context: any) => {
   console.log("param-Interno: ", param);
   try {
     const id = param; //req.url.split("/cliente/")[1];
-    const { nome, email, password } = await req.json();
+    const { nome, cnpj, municipio, uf } = await req.json() as DadosClientesProps;
     const idCliente = await updateById(id);
 
     if (!idCliente) {
@@ -82,7 +83,9 @@ export const PUT = async (req: Request, context: any) => {
         },
         data: {
           nome,
-          email,
+          cnpj,
+          municipio,
+          uf,
         },
       });
       return NextResponse.json(

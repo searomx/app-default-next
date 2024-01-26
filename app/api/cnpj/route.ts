@@ -43,21 +43,6 @@ type Idados = {
   ];
 };
 
-
-/** export async function POST() {
-  const res = await fetch('https://data.mongodb-api.com/...', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'API-Key': process.env.DATA_API_KEY,
-    },
-    body: JSON.stringify({ time: new Date().toISOString() }),
-  })
-
-  const data = await res.json()
-
-  return NextResponse.json(data)
-} **/
 export async function POST(req: NextRequest, resp: NextResponse) {
   //const controller = new AbortController();
   const { cnpj } = await req.json();
@@ -113,7 +98,7 @@ const obterDados = async (cnpj: string) => {
         qsa: json.qsa,
       },
     });
-    return NextResponse.json({ message: "dados do Cliente:", dados }, { status: 201 });
+    return NextResponse.json({ message: "dados do Cliente:", dados }, { status: 200 });
   } catch (error) {
     console.log("Ocorreu o erro: ", error);
     controller.abort();

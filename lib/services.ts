@@ -41,6 +41,7 @@ export const findCliente = async () => {
       select: {
         id: true,
         nome: true,
+        cnpj: true,
         municipio: true,
         uf: true,
       },
@@ -66,6 +67,7 @@ export const getAllClientes = () => {
     select: {
       id: true,
       nome: true,
+      cnpj: true,
       municipio: true,
       uf: true,
     },
@@ -108,6 +110,9 @@ export const getById = (id: string) => {
       select: {
         id: true,
         nome: true,
+        cnpj: true,
+        municipio: true,
+        uf: true,
       },
     });
     return dados.then((res) => {

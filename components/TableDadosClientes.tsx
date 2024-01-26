@@ -18,7 +18,7 @@ export default function TableDadosClientes() {
     intervalo = setInterval(() => showLine(), 1000);
   }
   const showLine = async () => {
-    const resp = await api.post("/api/cnpj", { cnpj: "27998559000109" })
+    const resp = await api.post("/api/cnpj", { cnpj: "28975442000334" })
       .then((response) => {
         const resposta = response.data;
         console.log("response:", JSON.stringify(resposta));
@@ -63,10 +63,34 @@ export default function TableDadosClientes() {
     console.log("Listagem: ", dados);
   };
 
+  const showDataClienteAll = async () => {
+    //let cnpjFormatado: string = cnpjMask('27998559000109');
+    //console.log("cnpj-formatado: ", cnpjFormatado);
+    const resp = await api.get("/api/cliente")
+      .then(response => {
+        const resposta = response.data;
+        for (let i = 0; i < resposta.length; i++) {
+          setDados(prevDados => [...prevDados, {
+            id: resposta[i].id,
+            nome: resposta[i].nome,
+            cnpj: resposta[i].cnpj,
+            municipio: resposta[i].municipio,
+            uf: resposta[i].uf
+          }]);
+        }
+
+        clearInterval(intervalo);
+      }).catch((error) => {
+        console.log("error:", error);
+        clearInterval(intervalo);
+      });
+    console.log("Listagem: ", { dados });
+  };
+
   return (
     <>
       <div className="flex flex-row justify-between">
-        <button className="btn btn-blue my-2" onClick={() => showDataClienteUnique()}>Obter Dados</button>
+        <button className="btn btn-blue my-2" onClick={() => showDataClienteAll()}>Obter Dados</button>
       </div>
       <div className="flex w-full max-h-[95%] p-3 border border-solid">
         <table className="flex flex-col max-h[90%] scroll-auto">
@@ -81,7 +105,7 @@ export default function TableDadosClientes() {
           </thead>
           <tbody>
             {dados.map((cliente, index) => (
-              <tr key={index} className="flex w-full">
+              <tr key={index} className={`flex w-full ${index % 2 === 0 ? 'bg-gray-200' : 'bg-gray-500'}`}>
                 <td className="text-black font-bold items-center w-[45%]">
                   {cliente.nome}
                 </td>

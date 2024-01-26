@@ -6,22 +6,8 @@ import error from "next/error";
 import Papa from "papaparse";
 import { useState } from "react";
 import { ToastContainer, TypeOptions, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import { clearInterval, setInterval } from "timers";
-import {
-  ChakraProvider,
-  Box,
-  VStack,
-  //Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
-  CloseButton,
-  useDisclosure
-} from "@chakra-ui/react";
-import { Providers } from "@/app/providers/providers";
-import { Alert } from "./Alert";
-import ValidaCnpj from "@/lib/utils/validacnpj";
-
 
 type TCnpj = {
   cnpj: string[];
@@ -36,7 +22,7 @@ type TDadosCliente = {
 export default function TableCnpjBase() {
   const [dados, setDados] = useState<TCnpj[] | null>([]);
   const [dadosCliente, setDadosCliente] = useState<TDadosCliente[] | null>([]);
-  const [resposta, setResposta] = useState<number>(0);
+  const [idCnpj, setIdCnpj] = useState<string[]>([]);
   const [processando, setProcessando] = useState<boolean>(false);
   const dataCnpj: TCnpj[] = [];
   let campo = "";
@@ -83,16 +69,21 @@ export default function TableCnpjBase() {
         headers,
       }).then((response) => {
         const resp = response.data;
-        resp.map((item: any) => {
-          console.log("item-base:", item.id);
-        })
+        // if (response.status === 200) {
+        //   resp.map((item: any) => {
+        //     setIdCnpj(prevDados => [...prevDados, item.id]);
+        //     console.log("item-base:", item.id);
+        //   })
+        // }
         getMensagemResponse(response.status, response.data);
-        console.log("response-base:", response.data);
+        console.log("response-base:", response.status);
+        return response;
       });
     setProcessando(false);
-
-    return result;
-
+    // idCnpj.map((item: any) => {
+    //   console.log("item-id:", item);
+    // });
+    return;
   }
 
   const getMensagemResponse = (resp: number, cnpj: string) => {
@@ -101,26 +92,23 @@ export default function TableCnpjBase() {
     let cnpjResp: string = cnpj;
     if (resResp === 200) {
       status = resResp;
-      getToast("CNPJs Salvos com sucesso!", "info");
-      return toast;
-    } else {
+      getToast("CNPJs Salvos com sucesso!", "success");
+    } else if (resResp === 201) {
       getToast(`O CNPJ: ${cnpjResp} já existe na base de dados!`, "error");
-      return toast;
     }
-
+    return;
   }
   async function getToast(mensagem: string, tipo: TypeOptions | undefined) {
-    toast(`O CNPJ: ${mensagem} já existe na base de dados!`, {
+    toast(mensagem, {
+      position: toast.POSITION.TOP_CENTER,
       type: tipo,
-      position: "top-center",
       autoClose: 3000,
-      hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
-
+      hideProgressBar: false,
     });
+
     return toast;
   }
 

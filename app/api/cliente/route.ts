@@ -7,26 +7,28 @@ type DadosClientesProps = {
   id: string;
   nome: string;
   cnpj: string;
-  email: string;
+  municipio: string;
+  uf: string;
 }
 
 export const GET = async (req: Request, res: Response) => {
   try {
-    const dados = await getAllClientes();
-    return NextResponse.json({ message: "OK", dados }, { status: 200 });
+    const data = await getAllClientes() as DadosClientesProps[];
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "Erro no Servidor" }, { status: 500 });
   }
 };
 
 export const POST = async (req: Request, res: Response) => {
-  const { nome, cnpj, email }: DadosClientesProps = await req.json();
+  const { nome, cnpj, municipio, uf }: DadosClientesProps = await req.json();
   try {
     const cliente = await prisma.customer.create({
       data: {
         nome,
-        email,
         cnpj,
+        municipio,
+        uf,
       },
     });
     return NextResponse.json({ message: "dados:", cliente }, { status: 201 });
