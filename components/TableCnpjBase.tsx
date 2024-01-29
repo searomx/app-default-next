@@ -2,10 +2,9 @@
 import { useFetch } from "@/app/hooks/useFetch";
 import { api } from "@/lib/api";
 import CompleteString from "@/lib/utils/completestring";
-import error from "next/error";
+import showToast from "@/lib/utils/showToast";
 import Papa from "papaparse";
 import { useState } from "react";
-import { ToastContainer, TypeOptions, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { clearInterval, setInterval } from "timers";
 
@@ -92,24 +91,11 @@ export default function TableCnpjBase() {
     let cnpjResp: string = cnpj;
     if (resResp === 200) {
       status = resResp;
-      getToast("CNPJs Salvos com sucesso!", "success");
+      showToast("CNPJs Salvos com sucesso!", "success");
     } else if (resResp === 201) {
-      getToast(`O CNPJ: ${cnpjResp} já existe na base de dados!`, "error");
+      showToast(`O CNPJ: ${cnpjResp} já existe na base de dados!`, "error");
     }
     return;
-  }
-  async function getToast(mensagem: string, tipo: TypeOptions | undefined) {
-    toast(mensagem, {
-      position: toast.POSITION.TOP_CENTER,
-      type: tipo,
-      autoClose: 3000,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      hideProgressBar: false,
-    });
-
-    return toast;
   }
 
   const getCnpjUnico = async (id: string) => {

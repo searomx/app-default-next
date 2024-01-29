@@ -1,6 +1,7 @@
 import { api } from "@/lib/api";
 import { cnpjMask } from "@/lib/utils/cnpjMask";
 import React, { useState } from "react";
+import CnpjBase from "@/app/models/CnpjBase";
 
 type IdadosClientesProps = {
   nome: string;

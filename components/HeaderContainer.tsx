@@ -6,12 +6,13 @@ import { Id, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React from "react";
 import ValidaCnpj from "@/lib/utils/validacnpj";
-import CnpjBase from "@/app/models/cnpjbase";
+import CnpjBase from "@/app/models/CnpjBase";
+import showToast from "@/lib/utils/showToast";
 
 type Idados = {
   id: number;
   cnpj: string;
-  cnpjs: CnpjBase;
+  //cnpjs: CnpjBase;
 }
 
 export default function HeaderContainer() {
@@ -47,9 +48,9 @@ export default function HeaderContainer() {
     const cnpj_validado = ValidaCnpj(inputCnpjUnico);
     if (cnpj_validado) {
       await api.post("/api/unique", { cnpj: cnpj_validado });
-      notify1();
+      showToast("CNPJ salvo com sucesso!", "success");
     } else {
-      notify2();
+      showToast("CNPJ inválido!", "error");
     }
   }
 
@@ -57,11 +58,8 @@ export default function HeaderContainer() {
     const cnpj_validado = ValidaCnpj(cnpj);
 
     await api.get(`/api/unique/${cnpj_validado}`);
-    notify2();
+    showToast("CNPJ inválido!", "error");
   };
-
-  const notify1 = async () => toast("CNPJ enviado com sucesso!");
-  const notify2 = async () => toast("CNPJ inválido!");
 
   return (
     <section className="flex min-w-full">
