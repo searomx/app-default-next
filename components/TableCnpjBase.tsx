@@ -216,7 +216,7 @@ export default function TableCnpjBase() {
   return (
     <>
       <div className="flex gap-3 p-3 justify-center">
-        <label htmlFor="selecao-arquivo" className="btn btn-blue">
+        <label htmlFor="selecao-arquivo" className="btn btn-blue cursor-pointer">
           Selecionar um arquivo &#187;
         </label>
         <input
@@ -224,7 +224,6 @@ export default function TableCnpjBase() {
           accept=".csv"
           type="file"
           onChange={handleFiles} />
-        {/* <button className="btn btn-blue" onClick={() => temporizador()}>Obter Dados</button> */}
       </div>
       <table className="flex flex-col w-full max-h[95%] scroll-auto p-4">
         <thead>

@@ -2,17 +2,11 @@ import { api } from "@/lib/api";
 import { cnpjMask } from "@/lib/utils/cnpjMask";
 import React, { useState } from "react";
 import CnpjBase from "@/app/models/CnpjBase";
-
-type IdadosClientesProps = {
-  nome: string;
-  cnpj: string;
-  municipio: string;
-  uf: string;
-}
+import { DataTable } from "../data-table";
+import { TCliente, columns } from "./columns";
 
 export default function TableDadosClientes() {
-  const [dados, setDados] = useState<IdadosClientesProps[]>([]);
-  let lista: IdadosClientesProps[] = [];
+  const [dados, setDados] = useState<any[]>([]);
   let intervalo: any;
 
   const temporizador = () => {
@@ -55,7 +49,12 @@ export default function TableDadosClientes() {
       .then((response) => {
         const resposta = response.data;
         console.log("response-get:", resposta.dados.nome);
-        setDados(prevDados => [...prevDados, { nome: resposta.dados.nome, cnpj: resposta.dados.cnpj, municipio: resposta.dados.municipio, uf: resposta.dados.uf }]);
+        setDados(prevDados => [...prevDados,
+        {
+          nome: resposta.dados.nome,
+          cnpj: resposta.dados.cnpj,
+          cidade: resposta.dados.municipio, uf: resposta.dados.uf
+        }]);
         clearInterval(intervalo);
       }).catch((error) => {
         console.log("error:", error);
@@ -75,7 +74,7 @@ export default function TableDadosClientes() {
             id: resposta[i].id,
             nome: resposta[i].nome,
             cnpj: resposta[i].cnpj,
-            municipio: resposta[i].municipio,
+            cidade: resposta[i].municipio,
             uf: resposta[i].uf
           }]);
         }
@@ -93,36 +92,8 @@ export default function TableDadosClientes() {
       <div className="flex flex-row justify-between">
         <button className="btn btn-blue my-2" onClick={() => showDataClienteAll()}>Obter Dados</button>
       </div>
-      <div className="flex w-full max-h-[95%] p-3 border border-solid">
-        <table className="flex flex-col max-h[90%] scroll-auto">
-          <thead className="flex w-full">
-            <tr className="flex flex-row">
-              <th className="flex w-[45%] bg-cyan-100">Nome</th>
-              <th className="flex w-[20%] bg-cyan-100">CNPJ</th>
-              <th className="flex w-[25%] bg-cyan-100">Cidade</th>
-              <th className="flex w-[5%] bg-cyan-100">Estado</th>
-
-            </tr>
-          </thead>
-          <tbody>
-            {dados.map((cliente, index) => (
-              <tr key={index} className={`flex w-full ${index % 2 === 0 ? 'bg-gray-200' : 'bg-gray-500'}`}>
-                <td className="text-black font-bold items-center w-[45%]">
-                  {cliente.nome}
-                </td>
-                <td className="text-black font-bold items-center w-[20%]">
-                  {cliente.cnpj}
-                </td>
-                <td className="text-black font-bold items-center w-[25%]">
-                  {cliente.municipio}
-                </td>
-                <td className="text-black font-bold items-center w-[5%]">
-                  {cliente.uf}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="container text-black">
+        <DataTable columns={columns} data={dados}></DataTable>
       </div>
     </>
   );

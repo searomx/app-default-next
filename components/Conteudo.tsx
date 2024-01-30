@@ -1,7 +1,6 @@
 'use client';
 import TableCnpjBase from "./TableCnpjBase";
-import TableDadosClientes from "./TableDadosClientes";
-import ListaClientes from "../app/data/listaClientes";
+import TableDadosClientes from "./clientes/TableDadosClientes";
 import { useContext } from "react";
 
 
@@ -15,17 +14,16 @@ export default function Conteudo() {
                       border border-solid border-zinc-400
                       max-h-[calc(100vh_-_14.8rem)]
                       rounded-md overflow-hidden
-                      p-2  bg-amber-400`}
+                      p-2`}
           >
             <TableCnpjBase />
           </div>
-
           <div
             className={`flex-1
                     border border-solid border-zinc-400
                     max-h-[calc(100vh_-_14.8rem)]
-                    rounded-md
-                    p-2 bg-amber-400`}
+                    rounded-md ml-4
+                    p-2`}
           >
             <TableDadosClientes />
           </div>
