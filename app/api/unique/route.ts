@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/db";
-import { findCnpjBase } from "@/lib/services";
+import { findCnpjByIdBase } from "@/lib/services";
 
 interface ParamsCnpjProps {
   cnpj: string;
@@ -88,13 +88,15 @@ export const POST = async (req: Request, res: Response) => {
 };
 
 export const GET = async (req: Request, res: Response) => {
-  const id = req.url.split("/unique/")[1];
-  console.log("id: ", id);
+  const { searchParams } = new URL(req.url);
+  const id = searchParams.get("id");
   try {
-    const dados = await findCnpjBase(id);
-    console.log("dados: ", dados);
-    return NextResponse.json({ message: "OK", dados }, { status: 200 });
+    if (id) {
+      const dados = await findCnpjByIdBase(id);
+      console.log("cnpj-enviado: ", id);
+      return Response.json({ dados }, { status: 200 });
+    }
   } catch (error) {
-    return NextResponse.json({ message: "Erro no Servidor" }, { status: 500 });
+    return Response.json({ error: "Cliente não encontrado!" }, { status: 400 });
   }
 };

@@ -49,12 +49,15 @@ export default function TableDadosClientes() {
       .then((response) => {
         const resposta = response.data;
         console.log("response-get:", resposta.dados.nome);
-        setDados(prevDados => [...prevDados,
-        {
+        const newDados = [...dados, {
+          id: resposta.dados.id,
           nome: resposta.dados.nome,
           cnpj: resposta.dados.cnpj,
-          cidade: resposta.dados.municipio, uf: resposta.dados.uf
-        }]);
+          cidade: resposta.dados.municipio,
+          uf: resposta.dados.uf
+        }];
+
+        setDados(newDados);
         clearInterval(intervalo);
       }).catch((error) => {
         console.log("error:", error);
@@ -70,13 +73,15 @@ export default function TableDadosClientes() {
       .then(response => {
         const resposta = response.data;
         for (let i = 0; i < resposta.length; i++) {
-          setDados(prevDados => [...prevDados, {
-            id: resposta[i].id,
-            nome: resposta[i].nome,
-            cnpj: resposta[i].cnpj,
-            cidade: resposta[i].municipio,
-            uf: resposta[i].uf
-          }]);
+          if (dados) {
+            setDados(dados => [...dados, {
+              id: resposta[i].id,
+              nome: resposta[i].nome,
+              cnpj: resposta[i].cnpj,
+              cidade: resposta[i].municipio,
+              uf: resposta[i].uf
+            }]);
+          }
         }
 
         clearInterval(intervalo);

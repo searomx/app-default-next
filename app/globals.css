@@ -44,8 +44,8 @@
   * {
     font-family: "Inter", sans-serif;
     font-weight: 400;
-    font-size: 16px;
-    line-height: 1.5;
+    font-size: 12px;
+    line-height: 1.218;
     letter-spacing: 0.5px;
     box-sizing: border-box;
     margin: 0;
@@ -63,7 +63,7 @@
   }
   /* body {
     font-family: "Inter", sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.5;
     color: #1f2937;
     background-color: #1f2937;
@@ -136,9 +136,22 @@
     display: none;
     cursor: pointer;
   }
-  th,
+  /* th,
   thead {
     @apply bg-gray-300 text-gray-300 font-semibold py-2 px-1 border rounded shadow;
+    @apply sticky top-0 m-0;
+  } */
+  th,
+  thead {
+    background-color: burlywood;
+    color: #c5c3c3;
+    font-weight: bold;
+    padding: 1px 2px 0 0;
+    border-radius: shadow 0.5em 0.5em 0.5em;
+    position: sticky;
+    top: 0;
+    margin: 0;
+    height: 1rem;
   }
 
   .dark {
@@ -183,6 +196,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground text-[13rem];
   }
 }

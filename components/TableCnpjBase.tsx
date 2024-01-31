@@ -1,15 +1,20 @@
 'use client';
 import { useFetch } from "@/app/hooks/useFetch";
 import { api } from "@/lib/api";
-import CompleteString from "@/lib/utils/completestring";
+import CompleteString from "@/lib/utils/CompleteString";
 import showToast from "@/lib/utils/showToast";
 import Papa from "papaparse";
 import { useState } from "react";
 import 'react-toastify/dist/ReactToastify.css';
 import { clearInterval, setInterval } from "timers";
+import { DataTableCnpj } from "./base/data-table-cnpj";
+import { TCnpjBase, columns } from "./base/column-cnpj";
+import PreviousMap from "postcss/lib/previous-map";
+import ShowToast from "@/lib/utils/showToast";
 
 type TCnpj = {
-  cnpj: string[];
+  id: string;
+  cnpj: string;
 };
 type TDadosCliente = {
   id: number;
@@ -19,7 +24,7 @@ type TDadosCliente = {
 
 
 export default function TableCnpjBase() {
-  const [dados, setDados] = useState<TCnpj[] | null>([]);
+  const [dados, setDados] = useState<TCnpj[]>([]);
   const [dadosCliente, setDadosCliente] = useState<TDadosCliente[] | null>([]);
   const [idCnpj, setIdCnpj] = useState<string[]>([]);
   const [processando, setProcessando] = useState<boolean>(false);
@@ -37,8 +42,8 @@ export default function TableCnpjBase() {
 
   const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    let txtcnpj = "";
-    let cnpjs: string[] = [];
+    let cnpjs: TCnpj[] = [];
+    let dadosCnpjs: TCnpj[] = [];
     const arquivo = e.target.files && e.target.files[0];
     if (arquivo) {
       Papa.parse(arquivo, {
@@ -46,14 +51,14 @@ export default function TableCnpjBase() {
         dynamicTyping: true,
         skipEmptyLines: true,
         complete: (results) => {
-          results.data.map((item: any) => {
-            txtcnpj = item.cnpj.toString();
-            campo = CompleteString(txtcnpj, 14, "0");
-            dataCnpj.push({ cnpj: [campo] });
-            cnpjs.push(campo);
+
+          cnpjs = results.data as TCnpj[];
+          cnpjs.map((item: any) => {
+            dadosCnpjs.push({ id: item.id, cnpj: CompleteString.formatarPadString(item.cnpj.toString(), 14, "0") });
           });
-          setDados(dataCnpj);
-          SaveAsCnpj(cnpjs);
+          console.log("lista cnpj:", cnpjs);
+          setDados(dadosCnpjs);
+          SaveAsCnpj(dadosCnpjs);
         },
         error: (error) => {
           alert("Erro ao analisar o CSV: " + error.message);
@@ -61,7 +66,7 @@ export default function TableCnpjBase() {
       });
     }
   }
-  async function SaveAsCnpj(cnpjs: string[]) {
+  async function SaveAsCnpj(cnpjs: TCnpj[]) {
     setProcessando(true);
     const result = await
       api.post("/api/base", cnpjs, {
@@ -91,9 +96,9 @@ export default function TableCnpjBase() {
     let cnpjResp: string = cnpj;
     if (resResp === 200) {
       status = resResp;
-      showToast("CNPJs Salvos com sucesso!", "success");
+      ShowToast.showToast("CNPJs Salvos com sucesso!", "success");
     } else if (resResp === 201) {
-      showToast(`O CNPJ: ${cnpjResp} já existe na base de dados!`, "error");
+      ShowToast.showToast(`O CNPJ: ${cnpjResp} já existe na base de dados!`, "error");
     }
     return;
   }
@@ -115,18 +120,18 @@ export default function TableCnpjBase() {
     // notify2();
   };
 
-  const itens = dados!.map((row, index) => {
-    return (
-      <tr key={index} className="flex min-w-full">
-        <td className="text-black font-bold justify-center items-center mx-2 w-[20%]">
-          {index + 1}
-        </td>
-        <td className="text-black font-bold justify-center items-center w-[80%] mx-2">
-          {row.cnpj ? row.cnpj : "Sem CNPJ"}
-        </td>
-      </tr>
-    );
-  });
+  // const itens = dados!.map((row) => {
+  //   return (
+  //     <tr key={index} className="flex min-w-full">
+  //       <td className="text-black font-bold justify-center items-center mx-2 w-[20%]">
+  //         {index + 1}
+  //       </td>
+  //       <td className="text-black font-bold justify-center items-center w-[80%] mx-2">
+  //         {row.cnpj ? row.cnpj : "Sem CNPJ"}
+  //       </td>
+  //     </tr>
+  //   );
+  // });
 
   const temporizador = () => {
     intervalo = setInterval(() => showLine(), 1000);
@@ -225,19 +230,9 @@ export default function TableCnpjBase() {
           type="file"
           onChange={handleFiles} />
       </div>
-      <table className="flex flex-col w-full max-h[95%] scroll-auto p-4">
-        <thead>
-          <tr className="flex min-w-full justify-center">
-            <th className="w-[20%]">ID</th>
-            <th className="flex w-[80%] justify-center bg-cyan-100">
-              CNPJ-BASE
-            </th>
-          </tr>
-        </thead>
-        <tbody>{itens}</tbody>
-      </table>
-
+      <div className="container">
+        <DataTableCnpj columns={columns} data={dados}></DataTableCnpj>
+      </div>
     </>
-
   );
 }

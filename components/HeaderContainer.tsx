@@ -8,6 +8,7 @@ import React from "react";
 import ValidaCnpj from "@/lib/utils/validacnpj";
 import CnpjBase from "@/app/models/CnpjBase";
 import showToast from "@/lib/utils/showToast";
+import ShowToast from "@/lib/utils/showToast";
 
 type Idados = {
   id: number;
@@ -48,9 +49,9 @@ export default function HeaderContainer() {
     const cnpj_validado = ValidaCnpj(inputCnpjUnico);
     if (cnpj_validado) {
       await api.post("/api/unique", { cnpj: cnpj_validado });
-      showToast("CNPJ salvo com sucesso!", "success");
+      ShowToast.showToast("CNPJ salvo com sucesso!", "success");
     } else {
-      showToast("CNPJ inválido!", "error");
+      ShowToast.showToast("CNPJ inválido!", "error");
     }
   }
 
@@ -58,7 +59,7 @@ export default function HeaderContainer() {
     const cnpj_validado = ValidaCnpj(cnpj);
 
     await api.get(`/api/unique/${cnpj_validado}`);
-    showToast("CNPJ inválido!", "error");
+    ShowToast.showToast("CNPJ inválido!", "error");
   };
 
   return (

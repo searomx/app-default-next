@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-
 import {
   ColumnDef,
   flexRender,
@@ -34,7 +33,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import React from 'react'
-import { Box, Icon, InputGroup, InputLeftElement } from '@chakra-ui/react'
+import { Icon, InputGroup, InputLeftElement } from '@chakra-ui/react'
 import { SearchIcon } from 'lucide-react'
 
 interface DataTableProps<TData, TValue> {
@@ -50,7 +49,6 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = React.useState({})
-  const [datax, setDatax] = useState(data)
 
   const table = useReactTable({
     data,
@@ -74,9 +72,9 @@ export function DataTable<TData, TValue>({
   return (
     <>
       {/* Filters */}
-      <div className='flex w-full h-16 p-2 bg-slate-100 mb-3 rounded-sm'>
+      <div className='flex min-w-full h-16 p-2 bg-slate-100 mb-3 rounded-md justify-between'>
         <div className='flex items-center'>
-          <InputGroup size='sm' maxW="12rem" className='flex p-4'>
+          <InputGroup size='sm' maxW="13rem" className='flex p-4'>
             <InputLeftElement pointerEvents='none' className='flex justify-center items-center p-4'>
               <Icon as={SearchIcon} color="gray.300" />
             </InputLeftElement>
@@ -87,12 +85,12 @@ export function DataTable<TData, TValue>({
               onChange={event =>
                 table.getColumn('nome')?.setFilterValue(event.target.value)
               }
-              className='max-w-screen-sm p-5 w-full'
+              className='p-5 2xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md sm:max-w-screen-sm'
             />
           </InputGroup>
         </div>
         <div className='flex items-center py-4'>
-          <InputGroup size='sm' maxW="12rem" className='flex p-4'>
+          <InputGroup size='sm' maxW="13rem" className='flex p-4'>
             <InputLeftElement pointerEvents='none' className='flex justify-center items-center p-4'>
               <Icon as={SearchIcon} color="gray.300" />
             </InputLeftElement>
@@ -107,22 +105,22 @@ export function DataTable<TData, TValue>({
           </InputGroup>
         </div>
         <div className='flex items-center py-4'>
-          <InputGroup size='sm' maxW="12rem" className='flex p-4'>
+          <InputGroup size='sm' maxW="13rem" className='flex p-4'>
             <InputLeftElement pointerEvents='none' className='flex justify-center items-center p-4'>
               <Icon as={SearchIcon} color="gray.300" />
             </InputLeftElement>
             <Input
-              placeholder='Buscar pela cidade...'
+              placeholder='Buscar pela cidade'
               value={(table.getColumn('cidade')?.getFilterValue() as string) ?? ''}
               onChange={event =>
                 table.getColumn('cidade')?.setFilterValue(event.target.value)
               }
-              className='max-w-sm p-5'
+              className='max-w-sm p-5 overflow-ellipsis'
             />
           </InputGroup>
         </div>
         <div className='flex items-center py-4'>
-          <InputGroup size='sm' maxW="12rem" className='flex p-4'>
+          <InputGroup size='sm' maxW="13rem" className='flex p-4'>
             <InputLeftElement pointerEvents='none' className='flex justify-center items-center p-4'>
               <Icon as={SearchIcon} color="gray.300" />
             </InputLeftElement>
@@ -166,7 +164,7 @@ export function DataTable<TData, TValue>({
 
       {/* Table */}
       <div className='rounded-md border border-solid p-4'>
-        <Table>
+        <Table className='bg-sky-300 justify-center items-center'>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
               <TableRow key={headerGroup.id}>

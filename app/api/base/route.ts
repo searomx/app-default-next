@@ -35,13 +35,13 @@ export const GET = async (req: Request) => {
 
 }
 export async function POST(req: NextRequest, resp: NextResponse) {
-  const cnpj: string[] = await req.json();
+  const cnpj: TBase[] = await req.json();
   console.log("cnpj-router: ", cnpj);
   let cnpjValido: TBase[] = [] as TBase[];
   let cnpjInValido: TBasex[] = [] as TBasex[];
   if (cnpj) {
     for (let i = 0; i < cnpj.length; i++) {
-      let cnpjx = cnpj[i] as TBase["cnpj"];
+      let cnpjx = cnpj[i].cnpj as TBase["cnpj"];
       const res = await prisma.base.findFirst({
         where: {
           cnpj: cnpjx,
